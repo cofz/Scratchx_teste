@@ -17,7 +17,7 @@
   ext.latestUserTweet = function(name, callback) {
     $.ajax({
       method: "GET",
-      url: "http://scratchx-twitter.herokuapp.com/1.1/statuses/user_timeline.json",
+      url: "https://api.thingspeak.com/channels/219279/feeds.json",
       data: {
         screen_name: name,
         count: 1
@@ -25,7 +25,7 @@
       dataType: "json",
       success: function(data) {
         if (data.length > 0) {
-          callback(data[0].text);
+          callback(data.feeds[0].field1);
           return;
         }
         callback("No tweets found");
