@@ -17,18 +17,15 @@
     ext.teste = function(name, callback) {
     $.ajax({
       method: "GET",
-      url: "http://scratchx-twitter.herokuapp.com/1.1/statuses/user_timeline.json",
-      data: {
-        screen_name: name,
-        count: 1
-      },
+      url: "https://api.thingspeak.com/channels/219279/feeds.json",
       dataType: "json",
       success: function(data) {
-        if (data.length > 0) {
+        console.log(data);
+/*        if (data.length > 0) {
           callback(data[0].text);
           return;
-        }
-        callback("No tweets found");
+        }*/
+        callback("Resultado");
       },
       error: function(xhr, textStatus, error) {
         console.log(error);
