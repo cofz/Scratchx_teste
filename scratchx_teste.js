@@ -92,7 +92,7 @@
 
   var descriptor = {
     blocks: [
-      ['R', 'Pegar o valor de @%s', 'teste', 'Field1'],
+      ['R', 'Pegar o valor de @%s', 'teste', 'field1'],
       ['R', 'latest tweet from @%s', 'latestUserTweet', 'scratch'],
       ['R', 'most %m.sort tweet containing %s', 'getTopTweet', 'recent', '#scratch'],
     ],
