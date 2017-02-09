@@ -67,7 +67,7 @@
 
   var descriptor = {
     blocks: [
-      ['R', 'latest tweet from @%s', 'latestUserTweet', 'scratch'],
+      ['R', 'latest tweet from @%s', 'latestUserTweet'],
       ['R', 'most %m.sort tweet containing %s', 'getTopTweet', 'recent', '#scratch'],
     ],
     menus: {
