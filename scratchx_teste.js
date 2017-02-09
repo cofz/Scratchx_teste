@@ -1,15 +1,27 @@
-
 (function(ext) {
 
-  $.get( "https://thingspeak.com/channels/219279/field/1/last.html", function( data ) {
-    ext.latestUserTweet = data; 
-});    
-
-/*  ext.latestUserTweet = function() {
-  $.get( "https://thingspeak.com/channels/219279/field/1/last.html", function( data ) {
-});    
-    
-  };*/
+  ext.latestUserTweet = function(name, callback) {
+    $.ajax({
+      method: "GET",
+      url: "http://scratchx-twitter.herokuapp.com/1.1/statuses/user_timeline.json",
+      data: {
+        screen_name: name,
+        count: 1
+      },
+      dataType: "json",
+      success: function(data) {
+        if (data.length > 0) {
+          callback(data[0].text);
+          return;
+        }
+        callback("No tweets found");
+      },
+      error: function(xhr, textStatus, error) {
+        console.log(error);
+        callback();
+      }
+    });
+  };
 
   ext.getTopTweet = function(sort, str, callback) {
     //If searching popluar, remove # and @ symbols from query
@@ -54,6 +66,6 @@
     url: 'https://dev.twitter.com/overview/documentation'
   };
 
-  ScratchExtensions.register('Teste', descriptor, ext);
+  ScratchExtensions.register('Twitter', descriptor, ext);
 
 })({});
