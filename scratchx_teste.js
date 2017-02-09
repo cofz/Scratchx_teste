@@ -1,11 +1,15 @@
 
 (function(ext) {
 
-  ext.latestUserTweet = function() {
+  $.get( "https://thingspeak.com/channels/219279/field/1/last.html", function( data ) {
+    ext.latestUserTweet = data; 
+});    
+
+/*  ext.latestUserTweet = function() {
   $.get( "https://thingspeak.com/channels/219279/field/1/last.html", function( data ) {
 });    
     
-  };
+  };*/
 
   ext.getTopTweet = function(sort, str, callback) {
     //If searching popluar, remove # and @ symbols from query
