@@ -13,15 +13,43 @@
  *along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(ext) {
-
-  ext.latestUserTweet = function(callback) {
+  
+    ext.teste = function(name, callback) {
     $.ajax({
       method: "GET",
-      url: "https://api.thingspeak.com/channels/219279/feeds.json",
+      url: "http://scratchx-twitter.herokuapp.com/1.1/statuses/user_timeline.json",
+      data: {
+        screen_name: name,
+        count: 1
+      },
       dataType: "json",
       success: function(data) {
-        if (data.feeds.length > 0) {
-          callback(data.feeds[0].field1);
+        if (data.length > 0) {
+          callback(data[0].text);
+          return;
+        }
+        callback("No tweets found");
+      },
+      error: function(xhr, textStatus, error) {
+        console.log(error);
+        callback();
+      }
+    });
+  };
+
+
+  ext.latestUserTweet = function(name, callback) {
+    $.ajax({
+      method: "GET",
+      url: "http://scratchx-twitter.herokuapp.com/1.1/statuses/user_timeline.json",
+      data: {
+        screen_name: name,
+        count: 1
+      },
+      dataType: "json",
+      success: function(data) {
+        if (data.length > 0) {
+          callback(data[0].text);
           return;
         }
         callback("No tweets found");
@@ -67,7 +95,8 @@
 
   var descriptor = {
     blocks: [
-      ['R', 'latest tweet from @%s', 'latestUserTweet'],
+      ['R', 'Pegar o valor de @%s', 'teste', 'Field1'],
+      ['R', 'latest tweet from @%s', 'latestUserTweet', 'scratch'],
       ['R', 'most %m.sort tweet containing %s', 'getTopTweet', 'recent', '#scratch'],
     ],
     menus: {
