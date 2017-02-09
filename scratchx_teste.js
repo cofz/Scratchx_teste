@@ -14,7 +14,7 @@
  */
 (function(ext) {
   
-    ext.teste = function(pin, callback) {
+    ext.teste_get = function(pin, callback) {
     $.ajax({
       method: "GET",
       url: "https://api.thingspeak.com/channels/219279/feeds.json",
@@ -34,6 +34,28 @@
     });
   };
 
+  
+  ext.teste_post = function(pin, callback) {
+    $.ajax({
+      method: "POST",
+      url: "https://api.thingspeak.com/update.json?api_key=4QS8PYAXTT6TXQDC&field1=On",
+      dataType: "json",
+      success: function(data) {
+        console.log(data.feeds[data.feeds.length-1].field1);
+        if (data.feeds.length > 0) {
+          callback(data.feeds[data.feeds.length-1][pin]);
+          return;
+        }
+        callback("Ocorreu um erro");
+      },
+      error: function(xhr, textStatus, error) {
+        console.log(error);
+        callback();
+      }
+    });
+  };
+
+  
 
   ext.latestUserTweet = function(name, callback) {
     $.ajax({
@@ -92,7 +114,8 @@
 
   var descriptor = {
     blocks: [
-      ['R', 'Valor de %m.pins', 'teste', 'field1'],
+      ['R', 'Valor de %m.pins', 'teste_get', 'field1'],
+      ['R', 'ligar', 'teste_post', 'field1'],
       ['R', 'latest tweet from @%s', 'latestUserTweet', 'scratch'],
       ['R', 'most %m.sort tweet containing %s', 'getTopTweet', 'recent', '#scratch'],
     ],
