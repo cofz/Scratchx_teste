@@ -20,12 +20,12 @@
       url: "https://api.thingspeak.com/channels/219279/feeds.json",
       dataType: "json",
       success: function(data) {
-        console.log(data);
-/*        if (data.length > 0) {
-          callback(data[0].text);
+        console.log(data.feeds[0].field1);
+        if (data.feeds.length > 0) {
+          callback(data.feeds[0].field1);
           return;
-        }*/
-        callback("Resultado");
+        }
+        callback("Ocorreu um erro");
       },
       error: function(xhr, textStatus, error) {
         console.log(error);
