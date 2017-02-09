@@ -1,7 +1,7 @@
 
 (function(ext) {
 
-  ext.latestUserTweet = function(name) {
+  ext.latestUserTweet = function() {
   $.get( "https://thingspeak.com/channels/219279/field/1/last.html", function( data ) {
 });    
     
