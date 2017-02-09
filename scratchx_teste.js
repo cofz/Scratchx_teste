@@ -20,7 +20,6 @@
       url: "https://api.thingspeak.com/channels/219279/feeds.json",
       dataType: "json",
       success: function(data) {
-        console.log(data);
         if (data.feeds.length > 0) {
           callback(data.feeds[0].field1);
           return;
