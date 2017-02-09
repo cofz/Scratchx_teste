@@ -14,17 +14,14 @@
  */
 (function(ext) {
 
-  ext.latestUserTweet = function(name, callback) {
+  ext.latestUserTweet = function(callback) {
     $.ajax({
       method: "GET",
       url: "https://api.thingspeak.com/channels/219279/feeds.json",
-      data: {
-        screen_name: name,
-        count: 1
-      },
       dataType: "json",
       success: function(data) {
-        if (data.length > 0) {
+        console.log(data);
+        if (data.feeds.length > 0) {
           callback(data.feeds[0].field1);
           return;
         }
