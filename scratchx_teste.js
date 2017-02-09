@@ -14,15 +14,15 @@
  */
 (function(ext) {
   
-    ext.teste = function(name, callback) {
+    ext.teste = function(pin, callback) {
     $.ajax({
       method: "GET",
       url: "https://api.thingspeak.com/channels/219279/feeds.json",
       dataType: "json",
       success: function(data) {
-        console.log(data.feeds[0].field1);
+        console.log(data.feeds[data.feeds.length-1].field1);
         if (data.feeds.length > 0) {
-          callback(data.feeds[data.feeds.length-1][name]);
+          callback(data.feeds[data.feeds.length-1][pin]);
           return;
         }
         callback("Ocorreu um erro");
