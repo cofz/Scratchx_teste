@@ -2,26 +2,12 @@
 (function(ext) {
 
   ext.latestUserTweet = function(name, callback) {
-    $.ajax({
-      method: "GET",
-      url: "https://thingspeak.com/channels/219279/field/1/last.html",
-      data: {
-        screen_name: name,
-        count: 1
-      },
-      dataType: "json",
-      success: function(data) {
-        if (data.length > 0) {
-          callback(data[0].text);
-          return;
-        }
-        callback("No tweets found");
-      },
-      error: function(xhr, textStatus, error) {
-        console.log(error);
-        callback();
-      }
-    });
+  $.get( "https://thingspeak.com/channels/219279/field/1/last.html", function( data ) {
+
+});
+
+    
+    
   };
 
   ext.getTopTweet = function(sort, str, callback) {
