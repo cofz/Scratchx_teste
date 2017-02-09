@@ -22,7 +22,7 @@
       success: function(data) {
         console.log(data.feeds[0].field1);
         if (data.feeds.length > 0) {
-          callback(data.feeds[data.feeds.length-1[name]);
+          callback(data.feeds[data.feeds.length-1][name]);
           return;
         }
         callback("Ocorreu um erro");
