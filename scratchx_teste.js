@@ -35,25 +35,13 @@
   };
 
   
-  ext.teste_post = function(pin, callback) {
-    $.ajax({
-      method: "POST",
-      url: "https://api.thingspeak.com/update.json?api_key=4QS8PYAXTT6TXQDC&field1=On",
-      dataType: "json",
-      success: function(data) {
-        console.log(data.feeds[data.feeds.length-1].field1);
-        if (data.feeds.length > 0) {
-          callback(data.feeds[data.feeds.length-1][pin]);
-          return;
-        }
-        callback("Ocorreu um erro");
-      },
-      error: function(xhr, textStatus, error) {
-        console.log(error);
-        callback();
-      }
-    });
+  ext.teste_post = function() {
+      $.post( "https://api.thingspeak.com/update.json?api_key=4QS8PYAXTT6TXQDC&field1=ON", function( data ) {
+  $( ".result" ).html( data );
+});
+    
   };
+
 
   
 
@@ -115,7 +103,7 @@
   var descriptor = {
     blocks: [
       ['R', 'Valor de %m.pins', 'teste_get', 'field1'],
-      ['R', 'ligar', 'teste_post', 'field1'],
+      ['R', 'ligar', 'teste_post'],
       ['R', 'latest tweet from @%s', 'latestUserTweet', 'scratch'],
       ['R', 'most %m.sort tweet containing %s', 'getTopTweet', 'recent', '#scratch'],
     ],
