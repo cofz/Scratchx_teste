@@ -92,12 +92,15 @@
 
   var descriptor = {
     blocks: [
-      ['R', 'Pegar o valor de @%s', 'teste', 'field1'],
+      ['R', 'Valor de %m.pins', 'teste', 'field1'],
       ['R', 'latest tweet from @%s', 'latestUserTweet', 'scratch'],
       ['R', 'most %m.sort tweet containing %s', 'getTopTweet', 'recent', '#scratch'],
     ],
     menus: {
-      sort: ["popular", "recent"]
+      sort: ["popular", "recent"],
+      pins: ["field1", "field2"]
+      
+      
     },
     url: 'https://dev.twitter.com/overview/documentation'
   };
