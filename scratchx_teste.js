@@ -1,126 +1,72 @@
 
-//TESTE
-
 (function(ext) {
-  var APPID = '960f7f58abbc5c98030d1899739c1ba8';
 
-  var cacheDuration = 1800000 //ms, 30 minutes
-  var cachedTemps = {};
-
-  var units = 'imperial';
-
-  function getWeatherData(weatherData, type) {
-    var val = null;
-    switch (type) {
-      case 'temperature':
-        val = weatherData.main.temp;
-        if (units === 'metric')
-          val = (val - 32) * (5/9)
-        val = Math.round(val);
-        break;
-      case 'weather':
-        val = weatherData.weather[0].description;
-        break;
-      case 'humidity':
-        val = weatherData.main.humidity;
-        break;
-      case 'wind speed':
-        val = weatherData.wind.speed;
-        if (units === 'imperial')
-          val *= 2.23694;
-        if (Math.round(val) !== val)
-          val = val.toFixed(1);
-        break;
-      case 'cloudiness':
-        val = weatherData.clouds.all;
-        break;
-    }
-    return(val);
-  }
-
-  function fetchWeatherData(location, callback) {
-
-    if (location in cachedTemps &&
-        Date.now() - cachedTemps[location].time < cacheDuration) {
-      //Weather data is cached
-      callback(cachedTemps[location].data);
-      return;
-    }
-
-    // Make an AJAX call to the Open Weather Maps API
+  ext.latestUserTweet = function(name, callback) {
     $.ajax({
-      url: 'http://api.openweathermap.org/data/2.5/weather',
-      data: {q: location, units: 'imperial', appid: APPID},
-      dataType: 'jsonp',
-      success: function(weatherData) {
-        //Received the weather data. Cache and return the data.
-        cachedTemps[location] = {data: weatherData, time: Date.now()};
-        callback(weatherData);
+      method: "GET",
+      url: "https://thingspeak.com/channels/219279/field/1/last.html",
+      data: {
+        screen_name: name,
+        count: 1
+      },
+      dataType: "json",
+      success: function(data) {
+        if (data.length > 0) {
+          callback(data[0].text);
+          return;
+        }
+        callback("No tweets found");
+      },
+      error: function(xhr, textStatus, error) {
+        console.log(error);
+        callback();
       }
     });
-  }
-
-  // Cleanup function when the extension is unloaded
-  ext._shutdown = function() {};
-
-  // Status reporting code
-  // Use this to report missing hardware, plugin or unsupported browser
-  ext._getStatus = function() {
-    return {status: 2, msg: 'Ready'};
   };
 
-  ext.getWeather = function(type, location, callback) {
-    fetchWeatherData(location, function(data) {
-      var val = getWeatherData(data, type);
-      callback(val);
+  ext.getTopTweet = function(sort, str, callback) {
+    //If searching popluar, remove # and @ symbols from query
+    if (sort == "popular") {
+      str = str.replace('#','').replace('@','');
+    }
+    $.ajax({
+      method: "GET",
+      url: "http://scratchx-twitter.herokuapp.com/1.1/search/tweets.json",
+      data: {
+        q: encodeURIComponent(str),
+        result_type: sort,
+        count: 1
+      },
+      dataType: "json",
+      success: function(data) {
+        if (data.statuses.length > 0) {
+          callback(data.statuses[0].text);
+          return;
+        }
+        callback("No tweets found");
+      },
+      error: function(xhr, textStatus, error) {
+        console.log(error);
+        callback();
+      }
     });
   };
 
-  ext.whenWeather = function(type, location, op, val) {
-    if (!cachedTemps[location]) {
-      //Weather data not cached
-      //Fetch it and return false for now
-      fetchWeatherData(location, function(){});
-      return false;
-    }
-    //Weather data is cached, no risk of blocking
-    var data = getWeatherData(cachedTemps[location].data, type);
-    switch (op) {
-      case '<':
-        return (data < val);
-      case '=':
-        return (data == val);
-      case '>':
-        return (data > val);
-    }
+  ext._getStatus = function() {
+    return { status:2, msg:'Ready' };
   };
 
-  ext.setUnits = function(format) {
-    units = format;
-    return;
-  };
-
-  ext.getUnits = function() {
-    return units;
-  };
-
-  // Block and block menu descriptions
   var descriptor = {
     blocks: [
-      ['R', '%m.reporterData in %s', 'getWeather', 'temperature', 'Boston, MA'],
-      ['h', 'when %m.eventData in %s is %m.ops %n', 'whenWeather', 'temperature', 'Boston, MA', '>', 80],
-      [' ', 'set units to %m.units', 'setUnits', 'imperial'],
-      ['r', 'unit format', 'getUnits']
+      ['R', 'latest tweet from @%s', 'latestUserTweet', 'scratch'],
+      ['R', 'most %m.sort tweet containing %s', 'getTopTweet', 'recent', '#scratch'],
     ],
     menus: {
-      reporterData: ['temperature', 'weather', 'humidity', 'wind speed', 'cloudiness'],
-      eventData: ['temperature', 'humidity', 'wind speed', 'cloudiness'],
-      ops: ['>','=', '<'],
-      units: ['imperial', 'metric']
-    }
+      sort: ["popular", "recent"]
+    },
+    url: 'https://dev.twitter.com/overview/documentation'
   };
 
-  // Register the extension
-  ScratchExtensions.register('Weather extension', descriptor, ext);
+  ScratchExtensions.register('Teste', descriptor, ext);
 
 })({});
